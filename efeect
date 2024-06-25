@@ -1,0 +1,59 @@
+class EffectScope {
+    private val effects = mutableListOf<Effect<*>>()
+
+    fun log(message: String) {
+        effects.add(Effect.Log(message))
+    }
+
+    fun getState(key: String): String? {
+        val effect = Effect.StateGet(key)
+        effects.add(effect)
+        return null // 仮の値
+    }
+
+    fun putState(key: String, value: String) {
+        effects.add(Effect.StatePut(key, value))
+    }
+
+    fun runEffects(): List<Effect<*>> = effects.toList()
+}
+
+fun <T> effect(block: EffectScope.() -> T): List<Effect<*>> {
+    val scope = EffectScope()
+    scope.block()
+    return scope.runEffects()
+}
+
+class EffectRunner {
+    private val state = mutableMapOf<String, String>()
+
+    fun run(effects: List<Effect<*>>) {
+        for (effect in effects) {
+            when (effect) {
+                is Effect.Log -> println(effect.message)
+                is Effect.StateGet -> {
+                    println("Get state for key: ${effect.key} -> ${state[effect.key]}")
+                }
+                is Effect.StatePut -> {
+                    state[effect.key] = effect.value
+                    println("Put state for key: ${effect.key}, value: ${effect.value}")
+                }
+            }
+        }
+    }
+}
+
+fun main() {
+    val effects = effect {
+        log("プログラムを開始します")
+        putState("key1", "value1")
+        log("状態が設定されました")
+        val value = getState("key1")
+        log("取得された値: $value")
+        putState("key2", "value2")
+        log("状態が再度設定されました")
+    }
+
+    val runner = EffectRunner()
+    runner.run(effects)
+}
