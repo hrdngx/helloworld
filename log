@@ -1,0 +1,17 @@
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+A problem occurred configuring root project 'spring-helloworld'.
+> Could not resolve all artifacts for configuration ':classpath'.
+   > Could not resolve org.springframework.boot:spring-boot-gradle-plugin:3.3.1.
+     Required by:
+         project : > org.springframework.boot:org.springframework.boot.gradle.plugin:3.3.1
+      > Dependency requires at least JVM runtime version 17. This build uses a Java 8 JVM.
+
+* Try:
+> Run this build using a Java 17 or newer JVM.
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
